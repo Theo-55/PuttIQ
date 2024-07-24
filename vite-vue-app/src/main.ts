@@ -24,4 +24,7 @@ import '@ionic/vue/css/display.css';
 //icons
 import 'ionicons/icons';
 
+//tailwind
+import './assets/tailwind.css';
+
 createApp(App).use(IonicVue).use(router).mount('#app')

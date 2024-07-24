@@ -13,7 +13,7 @@
       <ion-toolbar>
         <ion-title>Home Page</ion-title>
       </ion-toolbar>
-    </ion-header>brain-False-Mope-9@
+    </ion-header>
     <ion-content>
       <div class="example-content">Home Page</div>
     </ion-content>
