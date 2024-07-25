@@ -6,10 +6,10 @@ import LayoutTab from './components/LayoutTab.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/login',
   },
   {
-    path: '/',
+    path: '/puttIQ',
     component: LayoutTab,
     children: [
       {
@@ -25,6 +25,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('./views/SearchPage.vue'),
       },
     ],
+  },
+  {
+    path: '/login',
+    component: () => import('./views/LoginPage.vue'),
   },
 ];
 
