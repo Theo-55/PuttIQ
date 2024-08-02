@@ -6,16 +6,19 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
     //
     public function register(Request $request)
     {
+        Log::info('hittin register with data', $request->all());
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
@@ -23,11 +26,19 @@ class UserController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'first_name' => $request->first_name,
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
         ]);
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        return response()->json(['message' => 'User registered successfully', 'token' => $token], 200);
+    }
+
+    public function login(Request $request)
+    {
+
     }
 }

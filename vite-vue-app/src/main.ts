@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import { IonicVue } from '@ionic/vue';
+import { createPinia } from 'pinia';
 
 
 import router from './router';
@@ -27,4 +28,6 @@ import 'ionicons/icons';
 //tailwind
 import './assets/tailwind.css';
 
-createApp(App).use(IonicVue).use(router).mount('#app')
+const pinia = createPinia();
+
+createApp(App).use(IonicVue).use(router).use(pinia).mount('#app')
