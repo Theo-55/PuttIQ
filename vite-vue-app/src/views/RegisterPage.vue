@@ -1,10 +1,5 @@
 <template>
   <ion-page class="container">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Register</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content>
       <ion-card>
         <ion-card-header class="lgnHeader">
@@ -12,19 +7,19 @@
         </ion-card-header>
         <ion-card-content>
           <ion-item>
-            <IonLabel position="floating">Email</IonLabel>
+            <IonLabel position="stacked">Email</IonLabel>
             <IonInput v-model="email" type="email" required></IonInput>
           </ion-item>
           <ion-item>
-            <IonLabel position="floating">First Name</IonLabel>
+            <IonLabel position="stacked">First Name</IonLabel>
             <IonInput v-model="first_name" type="text" required></IonInput>
           </ion-item>
           <ion-item>
-            <IonLabel position="floating">Last Name</IonLabel>
+            <IonLabel position="stacked">Last Name</IonLabel>
             <IonInput v-model="last_name" type="text" required></IonInput>
           </ion-item>
           <ion-item>
-            <IonLabel position="floating">Password</IonLabel>
+            <IonLabel position="stacked">Password</IonLabel>
             <IonInput v-model="password" type="password" required></IonInput>
           </ion-item>
           <ion-button expand="block" @click="register">Register</ion-button>
@@ -36,17 +31,21 @@
 
 <script setup lang="ts">
 import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonPage,
   IonInput,
+  IonLabel,
+  IonItem,
+  IonButton,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
 } from "@ionic/vue";
 import { ref } from "vue";
-import { useUserStore } from "../stores/userStore";
-import apiService from "../services/apiService";
 import { useRouter } from "vue-router";
+import apiService from "../services/apiService";
+import { useUserStore } from "../stores/userStore";
 
 const email = ref("");
 const password = ref("");
@@ -54,20 +53,20 @@ const first_name = ref("");
 const last_name = ref("");
 
 const userStore = useUserStore();
-const useApiService = new apiService("http://api.test/");
+
+const api = new apiService("http://api.test/");
 const router = useRouter();
 
 const register = async () => {
   try {
-    console.log(email, first_name, last_name, password);
-    const response = await useApiService.post("api/user/register", {
+    const response = await api.post("api/user/register", {
       first_name: first_name.value,
       last_name: last_name.value,
       email: email.value,
       password: password.value,
     });
 
-    userStore.setAccessToken(response.access_token);
+    userStore.setAccessToken(response.data.token);
     router.push("/puttIQ/home");
     // Redirect or perform other actions after successful registration
   } catch (error) {

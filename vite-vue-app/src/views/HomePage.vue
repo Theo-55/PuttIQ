@@ -15,7 +15,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <div class="example-content">Home Page</div>
+      <div class="example-content">New Reload</div>
     </ion-content>
   </ion-page>
 </template>
@@ -28,4 +28,12 @@ import {
   IonContent,
   IonPage,
 } from "@ionic/vue";
+import { onMounted } from "vue";
+import { useUserStore } from "../stores/userStore";
+
+const userStore = useUserStore();
+
+onMounted(() => {
+  console.log(userStore.getAccessToken);
+});
 </script>

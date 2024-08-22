@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 
 class apiService {
     private axiosInstance: AxiosInstance;
-    private authStore = useUserStore(); // Assuming you have a Pinia store for user
+    private authStore = useUserStore(); 
 
     constructor(baseURL: string) {
         this.axiosInstance = axios.create({

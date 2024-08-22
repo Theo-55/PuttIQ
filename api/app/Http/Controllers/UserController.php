@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     //
     public function register(Request $request)
     {
-        Log::info('hittin register with data', $request->all());
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -32,13 +32,24 @@ class UserController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
 
-        $token = $user->createToken('API Token')->plainTextToken;
+        $token = $user->createToken('API Token', ['*'], now()->addMinutes(60))->plainTextToken;
 
         return response()->json(['message' => 'User registered successfully', 'token' => $token], 200);
     }
 
     public function login(Request $request)
     {
+
+        $validated = $request->validate([
+            'email' => ['bail', 'required', 'exists:users,email'],
+            'password' => ['bail', 'required', 'string'],
+        ]);
+
+        if (auth()->attempt($validated)) {
+            return redirect()->intended();
+        }
+
+        return back()->withErrors(['error' => 'Invalid username or password']);
 
     }
 }
