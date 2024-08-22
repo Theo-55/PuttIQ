@@ -30,6 +30,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     component: () => import('./views/LoginPage.vue'),
   },
+  {
+    path: '/register',
+    component: () => import('./views/RegisterPage.vue'),
+  },
 ];
 
 const router = createRouter({
