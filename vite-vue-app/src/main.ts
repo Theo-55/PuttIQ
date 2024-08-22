@@ -28,6 +28,7 @@ import 'ionicons/icons';
 //tailwind
 import './assets/tailwind.css';
 
+
 const pinia = createPinia();
 
 createApp(App).use(IonicVue).use(router).use(pinia).mount('#app')

@@ -78,6 +78,7 @@ const goToRegister = () => {
   margin-top: 20px;
   margin-bottom: 5px;
 }
+
 .container {
   margin: auto;
 }
@@ -92,4 +93,5 @@ const goToRegister = () => {
 .lgnInput {
   padding: 2px;
 }
+
 </style>

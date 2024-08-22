@@ -22,6 +22,7 @@ Route::get('/', function () {
     return response()->json("halo");
 });
 
+
 Route::post('user/register', [USerController::class, 'register']);
 
 Route::get('/led', [LedController::class, 'getState'])->name('led.state');
@@ -31,3 +32,6 @@ Route::post('/stroke/save', [StrokeController::class, 'save']);
 
 Route::post('/device/register', [DeviceAuthController::class, 'register']);
 Route::middleware('auth:sanctum')->post('/device/cycle', [StrokeController::class, 'store']);
+
+Route::get('/led', [LedController::class, 'getState'])->name('led.state');
+Route::post('/led', [LedController::class, 'switch'])->name('led.switch');
