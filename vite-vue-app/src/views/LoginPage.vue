@@ -56,13 +56,29 @@ import {
 
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import apiService from "../services/apiService";
+import { useUserStore } from "../stores/userStore";
+
+const api = new apiService("http://api.test/");
+const userStore = useUserStore();
 
 const router = useRouter();
 const email = ref("");
 const password = ref("");
 
-const login = () => {
-  console.log("hitting login");
+const login = async () => {
+  try {
+    const response = await api.post("api/user/register", {
+      email: email.value,
+      password: password.value,
+    });
+
+    userStore.setAccessToken(response.data.token);
+    router.push("/puttIQ/home");
+    // Redirect or perform other actions after successful registration
+  } catch (error) {
+    console.error("Error registering user:", error);
+  }
 };
 
 const goToRegister = () => {

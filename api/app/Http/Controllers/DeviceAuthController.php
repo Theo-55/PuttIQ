@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Device;
+use Illuminate\Http\Request;
 
 class DeviceAuthController extends Controller
 {

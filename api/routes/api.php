@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\LedController;
 use App\Http\Controllers\DeviceAuthController;
+use App\Http\Controllers\LedController;
 use App\Http\Controllers\StrokeController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return response()->json("halo");
+    return response()->json('halo');
 });
 
 
@@ -32,6 +31,3 @@ Route::post('/stroke/save', [StrokeController::class, 'save']);
 
 Route::post('/device/register', [DeviceAuthController::class, 'register']);
 Route::middleware('auth:sanctum')->post('/device/cycle', [StrokeController::class, 'store']);
-
-Route::get('/led', [LedController::class, 'getState'])->name('led.state');
-Route::post('/led', [LedController::class, 'switch'])->name('led.switch');

@@ -11,5 +11,4 @@ class Device extends Authenticatable
     use HasApiTokens, HasFactory;
 
     protected $fillable = ['name'];
-    
 }

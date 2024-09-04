@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         Led::create([
-            "ledState" => 0
+            'ledState' => 0,
         ]);
     }
 }

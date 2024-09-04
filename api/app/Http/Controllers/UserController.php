@@ -6,8 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -32,7 +30,7 @@ class UserController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
 
-        $token = $user->createToken('API Token', ['*'], now()->addMinutes(60))->plainTextToken;
+        $token = $user->createToken('API Token', ['*'], now()->addWeeks(2))->plainTextToken;
 
         return response()->json(['message' => 'User registered successfully', 'token' => $token], 200);
     }

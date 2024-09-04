@@ -12,7 +12,7 @@ class Stroke extends Model
     protected $fillable = [
         'data',
     ];
-    
+
     protected $casts = [
         'data' => 'array',
     ];

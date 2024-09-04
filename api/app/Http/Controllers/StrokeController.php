@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stroke;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\Stroke;
 
 class StrokeController extends Controller
 {
@@ -32,12 +32,13 @@ class StrokeController extends Controller
         //
         $data = $request->all();
         Log::info('data', $data);
-        try{
+        try {
             Stroke::create(['data' => $data]);
+
             return response()->json(['message' => 'Successfully saved stroke dat'], 200);
-        }catch(Exception $e)
-        {
+        } catch (Exception $e) {
             Log::info($e);
+
             return response()->json(['message' => 'Unable to store stroke data'], 500);
         }
 
