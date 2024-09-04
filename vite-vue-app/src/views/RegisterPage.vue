@@ -66,7 +66,7 @@ const register = async () => {
       password: password.value,
     });
 
-    userStore.setAccessToken(response.data.token);
+    userStore.setAccessToken(response.token);
     router.push("/puttIQ/home");
     // Redirect or perform other actions after successful registration
   } catch (error) {

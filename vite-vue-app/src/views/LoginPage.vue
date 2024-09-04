@@ -46,17 +46,45 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonPage } from "@ionic/vue";
-
+import {
+  IonContent,
+  IonPage,
+  IonInput,
+  IonLabel,
+  IonItem,
+  IonButton,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+} from "@ionic/vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import apiService from "../services/apiService";
+import { useUserStore } from "../stores/userStore";
 
 const router = useRouter();
 const email = ref("");
 const password = ref("");
 
-const login = () => {
-  console.log("hitting login");
+const userStore = useUserStore();
+const api = new apiService("http://api.test/");
+
+const login = async () => {
+  console.log(email.value);
+  try {
+    const response = await api.post("api/user/login", {
+      email: email.value,
+      password: password.value,
+    });
+    userStore.setAccessToken(response.token);
+    console.log("Login successful:", response);
+    router.push("/puttIQ/home");
+    // Handle successful login, e.g., store tokens, redirect, etc.
+  } catch (error) {
+    console.error("Login failed:", error);
+    // Handle login failure
+  }
 };
 
 const goToRegister = () => {

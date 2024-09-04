@@ -15,13 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*',],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => env('APP_ENV') === 'local' ? ['http://localhost:*'] : explode(', ', env('CORS_ALLOWED_ORIGINS')),
 
-    'allowed_origins_patterns' => ["*"],
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 

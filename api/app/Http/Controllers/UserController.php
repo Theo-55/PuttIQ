@@ -39,17 +39,27 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-
         $validated = $request->validate([
-            'email' => ['bail', 'required', 'exists:users,email'],
-            'password' => ['bail', 'required', 'string'],
+            'email' => [ 'required', 'exists:users,email'],
+            'password' => [ 'required', 'string'],
         ]);
 
         if (auth()->attempt($validated)) {
-            return redirect()->intended();
+            $user = auth()->user();
+            $token = $user->createToken('API Token', ['*'], now()->addMinutes(60))->plainTextToken;
+
+            return response()->json(['token' => $token]);
+                return redirect()->intended();
         }
 
-        return back()->withErrors(['error' => 'Invalid username or password']);
 
+
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Successfully logged out']);
     }
 }

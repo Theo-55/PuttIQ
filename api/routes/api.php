@@ -23,7 +23,8 @@ Route::get('/', function () {
 });
 
 
-Route::post('user/register', [USerController::class, 'register']);
+Route::post('user/register', [UserController::class, 'register']);
+Route::post('user/login', [UserController::class, 'login']);
 
 Route::get('/led', [LedController::class, 'getState'])->name('led.state');
 Route::post('/led', [LedController::class, 'switch'])->name('led.switch');
