@@ -46,13 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonPage,
-} from "@ionic/vue";
+import { IonContent, IonPage } from "@ionic/vue";
 
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -93,5 +87,4 @@ const goToRegister = () => {
 .lgnInput {
   padding: 2px;
 }
-
 </style>
