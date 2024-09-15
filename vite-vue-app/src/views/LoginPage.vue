@@ -34,7 +34,7 @@
           <div class="register-section">
             <ion-buttons>
               <span>New to the App?</span>
-              <ion-button size="medium" @click="goToRegister">
+              <ion-button size="default" @click="goToRegister">
                 Register Here
               </ion-button>
             </ion-buttons>

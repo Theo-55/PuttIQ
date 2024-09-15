@@ -1,1 +1,7 @@
-{}
+
+{
+  "appId": "com.example.vite-vue-app",
+  "appName": "vite-vue-app",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

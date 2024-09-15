@@ -11,27 +11,28 @@
     "ionic:serve": "vite dev --host"
   },
   "dependencies": {
-    "@capacitor/app": "6.0.0",
-    "@capacitor/core": "6.1.1",
-    "@capacitor/haptics": "6.0.0",
-    "@capacitor/ios": "6.1.1",
-    "@capacitor/keyboard": "6.0.1",
-    "@capacitor/status-bar": "6.0.0",
-    "@ionic/vue": "^8.2.5",
-    "@ionic/vue-router": "^8.2.5",
+    "@capacitor/app": "6.0.1",
+    "@capacitor/core": "6.1.2",
+    "@capacitor/haptics": "6.0.1",
+    "@capacitor/ios": "6.1.2",
+    "@capacitor/keyboard": "6.0.2",
+    "@capacitor/status-bar": "6.0.1",
+    "@ionic/vue": "8.3.0",
+    "@ionic/vue-router": "8.3.0",
     "axios": "^1.7.4",
     "pinia": "^2.2.0",
-    "vue": "^3.4.31",
-    "vue-router": "^4.4.0"
+    "vue": "3.5.5",
+    "vue-router": "4.4.5"
   },
   "devDependencies": {
-    "@capacitor/cli": "6.1.1",
+    "@capacitor/cli": "6.1.2",
+    "@types/node": "^22.5.5",
     "@vitejs/plugin-vue": "^5.0.5",
     "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.6",
-    "typescript": "^5.2.2",
-    "vite": "^5.3.4",
-    "vue-tsc": "^2.1.4"
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.11",
+    "typescript": "5.6.2",
+    "vite": "5.4.5",
+    "vue-tsc": "2.1.6"
   }
 }
