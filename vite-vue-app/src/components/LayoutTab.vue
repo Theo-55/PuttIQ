@@ -5,12 +5,7 @@
       <ion-tab-bar class="tabs">
         <ion-tab-button tab="home" href="puttIQ/home">
           <ion-icon :icon="homeOutline"></ion-icon>
-          <ion-label>Home Page </ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button tab="search" href="puttIQ/search">
-          <ion-icon :icon="search" />
-          <ion-label>Search</ion-label>
+          <ion-label>Dashboard</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -34,5 +29,5 @@ import {
   IonIcon,
 } from "@ionic/vue";
 
-import { search, homeOutline } from "ionicons/icons";
+import { homeOutline } from "ionicons/icons";
 </script>
