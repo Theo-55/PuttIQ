@@ -7,6 +7,10 @@
           <ion-icon :icon="homeOutline"></ion-icon>
           <ion-label>Dashboard</ion-label>
         </ion-tab-button>
+        <ion-tab-button tab="home" href="puttIQ/home">
+          <ion-icon :icon="logOutOutline"></ion-icon>
+          <ion-label>Logout</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -30,4 +34,5 @@ import {
 } from "@ionic/vue";
 
 import { homeOutline } from "ionicons/icons";
+import { logOutOutline } from "ionicons/icons";
 </script>

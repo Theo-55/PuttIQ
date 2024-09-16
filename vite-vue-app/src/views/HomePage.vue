@@ -42,19 +42,19 @@
       <div class="dashboard">
         <div class="quadrant">
           <h2>Total Putts</h2>
-          <p>0</p>
+          <p>20</p>
         </div>
         <div class="quadrant">
           <h2>Average Speed</h2>
-          <p>0</p>
+          <p>10</p>
         </div>
         <div class="quadrant">
           <h2>Putts Made</h2>
-          <p>0</p>
+          <p>9</p>
         </div>
         <div class="quadrant">
           <h2>Putts missed</h2>
-          <p>0</p>
+          <p>4</p>
         </div>
       </div>
     </ion-content>

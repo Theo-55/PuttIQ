@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        redirect: '/home',
+        redirect: 'home',
       },
       {
         path: 'home',
@@ -37,8 +37,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  // Use: createWebHistory(process.env.BASE_URL) in your app
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
 });
 
