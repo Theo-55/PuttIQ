@@ -80,10 +80,17 @@ const login = async () => {
     userStore.setAccessToken(response.token);
     console.log("Login successful:", response);
     router.push("/puttIQ/home");
-    // Handle successful login, e.g., store tokens, redirect, etc.
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login failed:", error);
-    // Handle login failure
+    if (error.response) {
+      console.error("Error response:", error.response);
+      console.error("Error status:", error.response.status);
+      console.error("Error data:", error.response.data);
+    } else if (error.request) {
+      console.error("Error request:", error.request);
+    } else {
+      console.error("Error message:", error.message);
+    }
   }
 };
 
