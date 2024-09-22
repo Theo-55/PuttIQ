@@ -1,7 +1,5 @@
-// src/services/BluetoothService.ts
-
 import { BleClient } from '@capacitor-community/bluetooth-le';
-
+import eventBus from './eventBus'; // Import the event bus
 class BluetoothService {
   async initializeBluetooth(): Promise<void> {
     await BleClient.initialize();
@@ -10,7 +8,6 @@ class BluetoothService {
   async scanForDevices(): Promise<any> {
     const device = await BleClient.requestDevice({
         services: [],
-        optionalServices: ['0000180F-0000-1000-8000-00805f9b34fb'],
     });
     console.log('Device found:', device);
     return device;
@@ -27,14 +24,12 @@ class BluetoothService {
     return result;
   }
 
-  async readBatteryLevel(deviceId: string): Promise<number> {
-    const batteryService = '0000180F-0000-1000-8000-00805f9b34fb'; // Battery Service UUID
-    const batteryLevelCharacteristic = '00002A19-0000-1000-8000-00805f9b34fb'; // Battery Level Characteristic UUID
-    console.log('awaiting battery level')
-    const result = await this.readData(deviceId, batteryService, batteryLevelCharacteristic);
-    const batteryLevel = result.getUint8(0); // Battery level is a single byte
-    console.log('Battery level:', batteryLevel);
-    return batteryLevel;
+  async startNotifications(deviceId: string, service: string, characteristic: string): Promise<void> {
+    await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
+      console.log('Notification received:', value);
+      eventBus.emit('dataReceived', value);
+    });
+    console.log('Started notifications on characteristic:', characteristic);
   }
 
   async disconnectDevice(deviceId: string): Promise<void> {

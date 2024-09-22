@@ -23,13 +23,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import BluetoothService from "@/services/BluetoothService";
+import { ref, onMounted, onUnmounted } from "vue";
+import BluetoothService from "../services/blueToothService";
 import { useBluetoothStore } from "../stores/bluetoothStore";
 import type { Device } from "../stores/bluetoothStore";
+import eventBus from "../services/eventBus";
 
 const bluetoothStore = useBluetoothStore();
-const device = ref<Device>();
+const device = ref<Device | undefined>();
 const data = ref<string | null>(null);
 const batteryLevel = ref<number | null>(null);
 
@@ -44,25 +45,20 @@ const initializeBluetooth = async () => {
 
 const scanForDevices = async () => {
   try {
-    device.value = await BluetoothService.scanForDevices();
-    bluetoothStore.setDevice(device.value);
+    const foundDevice = await BluetoothService.scanForDevices();
+    device.value = foundDevice;
+    bluetoothStore.setDevice(foundDevice);
     console.log("Device from store", bluetoothStore.getDevice);
     console.log("Device found:", device.value);
   } catch (error) {
     console.error("Error scanning for devices:", error);
   }
 };
-
 const connectToDevice = async () => {
   if (bluetoothStore.device) {
     try {
       console.log("device ID from store", bluetoothStore.device.deviceId);
       await BluetoothService.connectToDevice(bluetoothStore.device.deviceId);
-      console.log("Connected to device:", bluetoothStore.device);
-      batteryLevel.value = await BluetoothService.readBatteryLevel(
-        bluetoothStore.device.deviceId
-      );
-      console.log("Battery level:", batteryLevel.value);
     } catch (error) {
       console.error("Error connecting to device:", error);
     }
@@ -71,12 +67,13 @@ const connectToDevice = async () => {
   }
 };
 
+//TODO: remove from this and have it be session based
 const disconnectDevice = async () => {
   if (device.value) {
     try {
       await BluetoothService.disconnectDevice(device.value.deviceId);
       console.log("Disconnected from device:", device.value);
-      device.value = null;
+      device.value = undefined;
     } catch (error) {
       console.error("Error disconnecting from device:", error);
     }
@@ -84,6 +81,18 @@ const disconnectDevice = async () => {
     console.warn("No device to disconnect from");
   }
 };
+
+const handleDataReceived = (value: DataView) => {
+  const receivedValue = new TextDecoder().decode(value.buffer); // Adjust based on your data format
+};
+
+onMounted(() => {
+  eventBus.on("dataReceived", handleDataReceived);
+});
+
+onUnmounted(() => {
+  eventBus.off("dataReceived", handleDataReceived);
+});
 </script>
 
 <style scoped>
