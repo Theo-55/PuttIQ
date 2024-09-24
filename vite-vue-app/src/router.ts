@@ -21,6 +21,10 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('./views/HomePage.vue'),
       },
       {
+        path: 'connect',
+        component: () => import('./views/ConnectPage.vue'),
+      },
+      {
         path: 'search',
         component: () => import('./views/SearchPage.vue'),
       },
@@ -37,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 

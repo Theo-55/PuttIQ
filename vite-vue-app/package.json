@@ -11,6 +11,7 @@
     "ionic:serve": "vite dev --host"
   },
   "dependencies": {
+    "@capacitor-community/bluetooth-le": "^6.0.1",
     "@capacitor/app": "6.0.1",
     "@capacitor/core": "6.1.2",
     "@capacitor/haptics": "6.0.1",
@@ -20,6 +21,7 @@
     "@ionic/vue": "8.3.0",
     "@ionic/vue-router": "8.3.0",
     "axios": "^1.7.4",
+    "events": "^3.3.0",
     "pinia": "^2.2.0",
     "vue": "3.5.5",
     "vue-router": "4.4.5"
