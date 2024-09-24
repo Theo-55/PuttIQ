@@ -40,6 +40,7 @@ import {
   IonPage,
   IonButton,
 } from "@ionic/vue";
+
 import { ref, onMounted, onUnmounted } from "vue";
 import BluetoothService from "../services/blueToothService";
 import { useBluetoothStore } from "../stores/bluetoothStore";
@@ -84,6 +85,7 @@ onUnmounted(() => {
   }
   eventBus.off("dataReceived", handleDataReceived);
 });
+
 </script>
 
 <style scoped>
