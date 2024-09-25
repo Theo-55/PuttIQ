@@ -54,6 +54,7 @@ const scanForDevices = async () => {
     console.error("Error scanning for devices:", error);
   }
 };
+
 const connectToDevice = async () => {
   if (bluetoothStore.device) {
     try {
@@ -67,7 +68,6 @@ const connectToDevice = async () => {
   }
 };
 
-//TODO: remove from this and have it be session based
 const disconnectDevice = async () => {
   if (device.value) {
     try {
@@ -82,8 +82,8 @@ const disconnectDevice = async () => {
   }
 };
 
-const handleDataReceived = (value: DataView) => {
-  const receivedValue = new TextDecoder().decode(value.buffer); // Adjust based on your data format
+const handleDataReceived = () => {
+  return;
 };
 
 onMounted(() => {

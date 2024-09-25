@@ -1,4 +1,4 @@
-import { useSessionStore } from '../stores/sessionStore'; // Adjust the path to your store
+import { useSessionStore } from '../stores/sessionStore'; 
 
 class SessionService {
   private sessionStore = useSessionStore();

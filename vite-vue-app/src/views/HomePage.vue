@@ -6,7 +6,12 @@
       </ion-toolbar>
     </ion-header>
     <div style="padding: 10px; margin-top: 40px">
-      <ion-button shape="round" @click="startSession">+</ion-button>
+      <ion-button shape="round" @click="startSession" v-if="!sessionStarted"
+        >+</ion-button
+      >
+      <ion-button shape="round" @click="endSession" color="danger" v-else
+        >Stop</ion-button
+      >
     </div>
     <ion-content>
       <div class="dashboard">
@@ -50,9 +55,18 @@ import sessionService from "../services/sessionService";
 
 const bluetoothStore = useBluetoothStore();
 const device = ref<Device | undefined>();
+const sessionStarted = ref(false);
 
 const startSession = async () => {
+  sessionStarted.value = true;
   scanForDevices();
+};
+
+const endSession = async () => {
+  sessionStarted.value = false;
+  if (bluetoothStore.device) {
+    BluetoothService.disconnectDevice(bluetoothStore.device.deviceId);
+  }
 };
 
 const scanForDevices = async () => {
@@ -61,11 +75,12 @@ const scanForDevices = async () => {
     device.value = foundDevice;
     bluetoothStore.setDevice(foundDevice);
     if (bluetoothStore.device) {
+      console.log("deviceId", bluetoothStore.device.deviceId);
       await BluetoothService.connectToDevice(bluetoothStore.device.deviceId);
       console.log("success");
     }
   } catch (error) {
-    console.error("Error scanning for devices:", error);
+    console.error("Error", error);
   }
 };
 
@@ -85,7 +100,6 @@ onUnmounted(() => {
   }
   eventBus.off("dataReceived", handleDataReceived);
 });
-
 </script>
 
 <style scoped>
