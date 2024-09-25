@@ -2,21 +2,34 @@ import { BleClient } from '@capacitor-community/bluetooth-le';
 import eventBus from './eventBus'; // Import the event bus
 class BluetoothService {
   private keepAliveInterval: any;
-  private puttMadeUUID: string = 'your-putt-made-uuid';
-  private speedUUID: string = 'your-speed-uuid';
-  private serviceUUID: string = 'your-service-uuid';
+  private puttMadeUUID: string = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
+  private speedUUID: string = 'ec01d9ec-7335-4a42-9f54-6f648d4aaf1e';
+  private serviceUUID: string = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
 
   async initializeBluetooth(): Promise<void> {
     await BleClient.initialize();
   }
 
   async scanForDevices(): Promise<any> {
-    const device = await BleClient.requestDevice({
-        services: [],
-        optionalServices: [],
+    const timeout = 3 * 60 * 1000; 
+
+    const devicePromise = BleClient.requestDevice({
+      services: [], 
+      optionalServices: [this.serviceUUID, this.puttMadeUUID, this.speedUUID], 
     });
-    console.log('Device found:', device);
-    return device;
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request device timeout')), timeout)
+    );
+
+    try {
+      const device = await Promise.race([devicePromise, timeoutPromise]);
+      console.log('Device found:', device);
+      return device;
+    } catch (error) {
+      console.error('Failed to find device:', error);
+      throw error;
+    }
   }
 
   async connectToDevice(deviceId: string): Promise<void> {
@@ -30,8 +43,8 @@ class BluetoothService {
 
       console.log('Connected to device:', deviceId);
 
-      await this.startNotifications(deviceId, this.serviceUUID, this.puttMadeUUID);
-      await this.startNotifications(deviceId, this.serviceUUID, this.speedUUID);
+      //await this.startNotifications(deviceId, this.serviceUUID, this.puttMadeUUID);
+      //await this.startNotifications(deviceId, this.serviceUUID, this.speedUUID);
 
       // await this.startKeepAlive(deviceId, 'your-characteristic-uuid');
     } catch (error) {
