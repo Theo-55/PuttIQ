@@ -43,8 +43,8 @@ class BluetoothService {
 
       console.log('Connected to device:', deviceId);
 
-      //await this.startNotifications(deviceId, this.serviceUUID, this.puttMadeUUID);
-      //await this.startNotifications(deviceId, this.serviceUUID, this.speedUUID);
+      await this.startNotifications(deviceId, this.serviceUUID, this.puttMadeUUID);
+      await this.startNotifications(deviceId, this.serviceUUID, this.speedUUID);
 
       // await this.startKeepAlive(deviceId, 'your-characteristic-uuid');
     } catch (error) {
@@ -54,14 +54,12 @@ class BluetoothService {
 
   async discoverServicesAndCharacteristics(deviceId: string): Promise<void> {
     try {
-      // Discover services
       const services = await BleClient.getServices(deviceId);
       console.log('Discovered services:', services);
 
       for (const service of services) {
         console.log(`Service UUID: ${service.uuid}`);
 
-        // Inspect characteristics for each service
         for (const characteristic of service.characteristics) {
           console.log(`Characteristic UUID: ${characteristic.uuid}`);
           console.log(`Characteristic properties: ${JSON.stringify(characteristic.properties)}`);
@@ -83,6 +81,19 @@ class BluetoothService {
       console.log(`Attempting to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}`);
       await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
         console.log('Notification received:', value);
+
+        // Convert DataView to appropriate value
+        const data = new Uint8Array(value.buffer);
+        if (characteristic === this.puttMadeUUID) {
+          const puttMade = data[0];
+          if (puttMade === 1) {
+            console.log('Putt Made')
+          }
+        } else if (characteristic === this.speedUUID) {
+          const speed = new DataView(value.buffer).getFloat32(0, true);
+          console.log("The speed was:", speed)
+        }
+
         eventBus.emit('dataReceived', value);
       });
       console.log('Started notifications on characteristic:', characteristic);

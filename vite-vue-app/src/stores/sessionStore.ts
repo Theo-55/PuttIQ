@@ -8,6 +8,9 @@ export const useSessionStore = defineStore('session', {
   state: () => ({
     sessionStart: null as Date | null,
     sessionData: [] as SessionData[],
+    puttsMadeCount: 0,
+    speed: 0,
+
   }),
   actions: {
     startSession() {
@@ -16,6 +19,12 @@ export const useSessionStore = defineStore('session', {
     },
     addData(data: any) {
       this.sessionData.push({ data });
+    },
+    incrementPuttsMade() {
+      this.puttsMadeCount++;
+    },
+    updateSpeed(newSpeed: number) {
+      this.speed = newSpeed;
     },
     clearSession() {
       this.sessionStart = null;
