@@ -33,7 +33,7 @@ class BluetoothService {
   }
 
   async connectToDevice(deviceId: string): Promise<void> {
-    try {
+    try { 
       console.log('Attempting to connect to device:', deviceId);
 
       await BleClient.connect(deviceId, async (deviceId) => {
@@ -51,6 +51,26 @@ class BluetoothService {
       console.error('Failed to connect to device:', error);
     }
   }
+
+  async discoverServicesAndCharacteristics(deviceId: string): Promise<void> {
+    try {
+      // Discover services
+      const services = await BleClient.getServices(deviceId);
+      console.log('Discovered services:', services);
+
+      for (const service of services) {
+        console.log(`Service UUID: ${service.uuid}`);
+
+        // Inspect characteristics for each service
+        for (const characteristic of service.characteristics) {
+          console.log(`Characteristic UUID: ${characteristic.uuid}`);
+          console.log(`Characteristic properties: ${JSON.stringify(characteristic.properties)}`);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to discover services and characteristics:', error);
+    }
+  }
   
   async readData(deviceId: string, service: string, characteristic: string): Promise<DataView> {
     const result = await BleClient.read(deviceId, service, characteristic);
@@ -59,11 +79,16 @@ class BluetoothService {
   }
 
   async startNotifications(deviceId: string, service: string, characteristic: string): Promise<void> {
-    await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
-      console.log('Notification received:', value);
-      eventBus.emit('dataReceived', value);
-    });
-    console.log('Started notifications on characteristic:', characteristic);
+    try {
+      console.log(`Attempting to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}`);
+      await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
+        console.log('Notification received:', value);
+        eventBus.emit('dataReceived', value);
+      });
+      console.log('Started notifications on characteristic:', characteristic);
+    } catch (error) {
+      console.error(`Failed to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}. Error:`, error);
+    }
   }
 
   async disconnectDevice(deviceId: string): Promise<void> {

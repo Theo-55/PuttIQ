@@ -65,7 +65,7 @@ const startSession = async () => {
 const endSession = async () => {
   sessionStarted.value = false;
   if (bluetoothStore.device) {
-    BluetoothService.disconnectDevice(bluetoothStore.device.deviceId);
+    BluetoothService.disconnectDevice(bluetoothStore.device.deviceId); //TODO: convert device id to a computed value from the store
   }
 };
 
@@ -78,6 +78,9 @@ const scanForDevices = async () => {
       console.log("deviceId", bluetoothStore.device.deviceId);
       await BluetoothService.connectToDevice(bluetoothStore.device.deviceId);
       console.log("success");
+      await BluetoothService.discoverServicesAndCharacteristics(
+        bluetoothStore.device.deviceId
+      );
     }
   } catch (error) {
     console.error("Error", error);

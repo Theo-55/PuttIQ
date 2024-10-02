@@ -71,7 +71,6 @@ const userStore = useUserStore();
 const api = new apiService("http://api.test/");
 
 const login = async () => {
-  console.log(email.value);
   try {
     const response = await api.post("api/user/login", {
       email: email.value,
