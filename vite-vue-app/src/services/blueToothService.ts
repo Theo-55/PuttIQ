@@ -10,6 +10,7 @@ class BluetoothService {
     await BleClient.initialize();
   }
 
+
   async scanForDevices(): Promise<any> {
     const timeout = 3 * 60 * 1000; 
 
@@ -43,8 +44,8 @@ class BluetoothService {
 
       console.log('Connected to device:', deviceId);
 
-      await this.startNotifications(deviceId, this.serviceUUID, this.puttMadeUUID);
-      await this.startNotifications(deviceId, this.serviceUUID, this.speedUUID);
+      await this.startNotificationsWithRetry(deviceId, this.puttMadeUUID);
+      await this.startNotificationsWithRetry(deviceId, this.speedUUID);
 
       // await this.startKeepAlive(deviceId, 'your-characteristic-uuid');
     } catch (error) {
@@ -76,31 +77,38 @@ class BluetoothService {
     return result;
   }
 
+  
   async startNotifications(deviceId: string, service: string, characteristic: string): Promise<void> {
-    try {
-      console.log(`Attempting to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}`);
-      await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
-        console.log('Notification received:', value);
 
-        // Convert DataView to appropriate value
-        const data = new Uint8Array(value.buffer);
-        if (characteristic === this.puttMadeUUID) {
-          const puttMade = data[0];
-          if (puttMade === 1) {
-            console.log('Putt Made')
+        console.log(`Attempting to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}`);
+
+        // Check connection by attempting to read a characteristic
+        await BleClient.read(deviceId, service, characteristic); // Check if connected
+
+        // Start notifications
+        await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
+            console.log('Notification received:', value);
+        });
+        console.log('Notifications started successfully.');
+        
+
+}
+
+
+    async startNotificationsWithRetry(deviceId: string, characteristic: string, retries: number = 3): Promise<void> {
+      for (let i = 0; i < retries; i++) {
+          try {
+              await this.startNotifications(deviceId, this.serviceUUID, characteristic);
+                return; // Exit if successful
+          } 
+          catch (error) {
+              console.error(`Retry ${i + 1}/${retries} failed to start notifications for characteristic: ${characteristic}`, error);
+              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retrying
           }
-        } else if (characteristic === this.speedUUID) {
-          const speed = new DataView(value.buffer).getFloat32(0, true);
-          console.log("The speed was:", speed)
-        }
-
-        eventBus.emit('dataReceived', value);
-      });
-      console.log('Started notifications on characteristic:', characteristic);
-    } catch (error) {
-      console.error(`Failed to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}. Error:`, error);
-    }
+      }
+      console.error(`Failed to start notifications after ${retries} attempts for characteristic: ${characteristic}.`);
   }
+  
 
   async disconnectDevice(deviceId: string): Promise<void> {
     await BleClient.disconnect(deviceId);
