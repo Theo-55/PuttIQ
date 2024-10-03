@@ -77,7 +77,6 @@ const scanForDevices = async () => {
     if (bluetoothStore.device) {
       console.log("deviceId", bluetoothStore.device.deviceId);
       await BluetoothService.connectToDevice(bluetoothStore.device.deviceId);
-      console.log("success");
       await BluetoothService.discoverServicesAndCharacteristics(
         bluetoothStore.device.deviceId
       );

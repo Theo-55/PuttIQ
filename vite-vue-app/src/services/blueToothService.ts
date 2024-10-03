@@ -44,8 +44,8 @@ class BluetoothService {
 
       console.log('Connected to device:', deviceId);
 
-      await this.startNotificationsWithRetry(deviceId, this.puttMadeUUID);
-      await this.startNotificationsWithRetry(deviceId, this.speedUUID);
+      await this.startNotifications(deviceId, this.serviceUUID, this.puttMadeUUID);
+      await this.startNotifications(deviceId, this.serviceUUID, this.speedUUID);
 
       // await this.startKeepAlive(deviceId, 'your-characteristic-uuid');
     } catch (error) {
@@ -77,25 +77,31 @@ class BluetoothService {
     return result;
   }
 
-  
   async startNotifications(deviceId: string, service: string, characteristic: string): Promise<void> {
+      try {
+        const readValue = await BleClient.read(deviceId, service, characteristic);
+        console.log('Read value:', readValue);
 
-        console.log(`Attempting to start notifications for device: ${deviceId}, service: ${service}, characteristic: ${characteristic}`);
+        // Optionally, parse the read value if needed
+        const decoder = new TextDecoder('utf-8');
+        const message = decoder.decode(readValue);
+        console.log('Parsed read message:', message);
 
-        // Check connection by attempting to read a characteristic
-        await BleClient.read(deviceId, service, characteristic); // Check if connected
-
-        // Start notifications
+        // Now start notifications
         await BleClient.startNotifications(deviceId, service, characteristic, (value) => {
-            console.log('Notification received:', value);
+          console.log('Notification received:', value);
+          // Parse the DataView object to a string
+          const notificationMessage = decoder.decode(value);
+          console.log('Parsed notification message:', notificationMessage);
         });
-        console.log('Notifications started successfully.');
-        
 
-}
+      } catch (error) {
+        console.error(`didnt work :(`, error);
+      }
+  }
 
-
-    async startNotificationsWithRetry(deviceId: string, characteristic: string, retries: number = 3): Promise<void> {
+  /*
+    async startNotificationsWithRetry(deviceId: string, characteristic: string, retries: number = 2): Promise<void> {
       for (let i = 0; i < retries; i++) {
           try {
               await this.startNotifications(deviceId, this.serviceUUID, characteristic);
@@ -107,7 +113,7 @@ class BluetoothService {
           }
       }
       console.error(`Failed to start notifications after ${retries} attempts for characteristic: ${characteristic}.`);
-  }
+  } */
   
 
   async disconnectDevice(deviceId: string): Promise<void> {
@@ -116,26 +122,19 @@ class BluetoothService {
   }
 
 
-  // private async startKeepAlive(deviceId: string, characteristicUuid: string): Promise<void> {
-  //   const keepAliveData = new Uint8Array([0x00]); 
-  //   const keepAliveDataView = new DataView(keepAliveData.buffer);
+  private async startKeepAlive(deviceId: string, service: string, characteristic: string): Promise<void> {
+    setInterval(async () => {
+      try {
+        await BleClient.read(deviceId, service, characteristic);
+        console.log('Keep-alive read successful.');
+      } catch (error) {
+        console.error('Keep-alive read failed, attempting to reconnect...', error);
+        // Attempt to reconnect and restart notifications
+        await this.startNotifications(deviceId, service, characteristic);
+      }
+    }, 1000); 
+  }
 
-  //   this.keepAliveInterval = setInterval(async () => {
-  //     try {
-  //       await BleClient.write(deviceId, 'your-service-uuid', characteristicUuid, keepAliveDataView);
-  //       console.log('Keep-alive data sent');
-  //     } catch (error) {
-  //       console.error('Failed to send keep-alive data:', error);
-  //     }
-  //   }, 5000); 
-  // }
-
-  // private async stopKeepAlive(): Promise<void> {
-  //   if (this.keepAliveInterval) {
-  //     clearInterval(this.keepAliveInterval);
-  //     this.keepAliveInterval = null;
-  //   }
-  // }
 
   private async handleDisconnection(deviceId: string): Promise<void> {
     // await this.stopKeepAlive();
