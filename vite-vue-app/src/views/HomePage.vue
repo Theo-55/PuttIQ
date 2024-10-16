@@ -52,7 +52,7 @@ import { useBluetoothStore } from "../stores/bluetoothStore";
 import type { Device } from "../stores/bluetoothStore";
 import eventBus from "../services/eventBus";
 import sessionService from "../services/sessionService";
-import { useSessionStore }from "../stores/sessionStore";
+import { useSessionStore } from "../stores/sessionStore";
 
 const bluetoothStore = useBluetoothStore();
 const sessionStore = useSessionStore();
@@ -88,21 +88,21 @@ const scanForDevices = async () => {
   }
 };
 
-const handleDataReceived = (value: DataView) => {
-  console.log('hitting event bus');
-  sessionService.updateCount()
+const handleDataReceived = () => {
+  console.log("hitting event bus");
+  sessionService.updateCount();
 };
 
 onMounted(() => {
   BluetoothService.initializeBluetooth();
-  eventBus.on("dataReceived", handleDataReceived);
+  eventBus.on("bluetooth-notification", handleDataReceived);
 });
 
 onUnmounted(() => {
   if (bluetoothStore.device) {
     BluetoothService.disconnectDevice(bluetoothStore.device.deviceId);
   }
-  eventBus.off("dataReceived", handleDataReceived);
+  eventBus.off("bluetooth-notification", handleDataReceived);
 });
 </script>
 

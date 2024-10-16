@@ -1,7 +1,6 @@
 import { BleClient } from '@capacitor-community/bluetooth-le';
 import eventBus from './eventBus'; // Import the event bus
 class BluetoothService {
-  private keepAliveInterval: any;
   private puttMadeUUID: string = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
   private speedUUID: string = 'ec01d9ec-7335-4a42-9f54-6f648d4aaf1e';
   private serviceUUID: string = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
@@ -9,7 +8,6 @@ class BluetoothService {
   async initializeBluetooth(): Promise<void> {
     await BleClient.initialize();
   }
-
 
   async scanForDevices(): Promise<any> {
     const timeout = 3 * 60 * 1000; 
@@ -94,6 +92,8 @@ class BluetoothService {
           // Parse the DataView object to a string
           const notificationMessage = decoder.decode(value);
           console.log('Parsed notification message:', notificationMessage);
+
+          eventBus.emit('bluetooth-notification', notificationMessage);
         });
 
       } catch (error) {
@@ -123,23 +123,21 @@ class BluetoothService {
   }
 
 
-  private async startKeepAlive(deviceId: string, service: string, characteristic: string): Promise<void> {
-    setInterval(async () => {
-      try {
-        await BleClient.read(deviceId, service, characteristic);
-        console.log('Keep-alive read successful.');
-      } catch (error) {
-        console.error('Keep-alive read failed, attempting to reconnect...', error);
-        // Attempt to reconnect and restart notifications
-        await this.startNotifications(deviceId, service, characteristic);
-      }
-    }, 1000); 
-  }
+  // private async startKeepAlive(deviceId: string, service: string, characteristic: string): Promise<void> {
+  //   setInterval(async () => {
+  //     try {
+  //       await BleClient.read(deviceId, service, characteristic);
+  //       console.log('Keep-alive read successful.');
+  //     } catch (error) {
+  //       console.error('Keep-alive read failed, attempting to reconnect...', error);
+  //       // Attempt to reconnect and restart notifications
+  //       await this.startNotifications(deviceId, service, characteristic);
+  //     }
+  //   }, 1000); 
+  // }
 
 
   private async handleDisconnection(deviceId: string): Promise<void> {
-    // await this.stopKeepAlive();
-    
     setTimeout(async () => {
       console.log('Reconnecting to device:', deviceId);
       await this.connectToDevice(deviceId);
