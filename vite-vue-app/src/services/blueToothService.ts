@@ -79,6 +79,7 @@ class BluetoothService {
 
   async startNotifications(deviceId: string, service: string, characteristic: string): Promise<void> {
       try {
+        console.log('about to read');
         const readValue = await BleClient.read(deviceId, service, characteristic);
         console.log('Read value:', readValue);
 

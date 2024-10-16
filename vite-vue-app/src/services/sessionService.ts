@@ -6,6 +6,9 @@ class SessionService {
   handleIncomingData(data: any) {
     this.sessionStore.addData(data);
   }
+  updateCount() {
+    this.sessionStore.incrementPuttsMade();
+  }
 
 }
 

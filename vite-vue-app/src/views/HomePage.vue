@@ -17,7 +17,7 @@
       <div class="dashboard">
         <div class="quadrant">
           <h2>Total Putts</h2>
-          <p>20</p>
+          <p>{{ sessionStore.puttsMadeCount }}</p>
         </div>
         <div class="quadrant">
           <h2>Average Speed</h2>
@@ -52,8 +52,10 @@ import { useBluetoothStore } from "../stores/bluetoothStore";
 import type { Device } from "../stores/bluetoothStore";
 import eventBus from "../services/eventBus";
 import sessionService from "../services/sessionService";
+import { useSessionStore }from "../stores/sessionStore";
 
 const bluetoothStore = useBluetoothStore();
+const sessionStore = useSessionStore();
 const device = ref<Device | undefined>();
 const sessionStarted = ref(false);
 
@@ -87,8 +89,8 @@ const scanForDevices = async () => {
 };
 
 const handleDataReceived = (value: DataView) => {
-  const receivedValue = new TextDecoder().decode(value.buffer);
-  sessionService.handleIncomingData(receivedValue);
+  console.log('hitting event bus');
+  sessionService.updateCount()
 };
 
 onMounted(() => {
